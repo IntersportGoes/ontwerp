@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ontwerp uw kleding in 3D | Intersport Goes</title>
+<meta name="description" content="Upload uw logo, plaats het op een T-shirt, polo, hoodie, jas of short en zie direct hoe het uitkomt. Vraag daarna direct een offerte aan bij Intersport Goes.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#144390">
+<link rel="preload" href="archivo.woff" as="font" type="font/woff" crossorigin>
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="configurator.css">
+<style>
+.tool-head .wrap{display:flex;align-items:center;gap:20px;min-height:76px}
+.tool-head .right{margin-left:auto;display:flex;align-items:center;gap:18px}
+.tool-head .tel{font-weight:600;color:var(--ink);text-decoration:none;white-space:nowrap}
+.tool-head .tel:hover{color:var(--blue)}
+.cfg{--head:77px}
+@media (max-width:640px){.tool-head .tel{display:none}.tool-head .btn{min-height:42px;padding:0 14px;font-size:14px}.tool-head .brand img{height:30px}}
+</style>
+</head>
+<body>
+<header class="site-head tool-head"><div class="wrap">
+  <a class="brand" id="homeLink" href="https://intersportgoes-prowear.nl" aria-label="Intersport Goes, naar de website"><img src="logo.svg" alt="Intersport Goes" width="196" height="40"></a>
+  <div class="right">
+    <a class="tel" href="tel:+31113270860">0113 - 27 08 60</a>
+    <a class="btn btn-line" id="siteLink" href="https://intersportgoes-prowear.nl">Naar de website</a>
+  </div>
+</div></header>
+
+<main id="main">
+<div class="cfg">
+  <section class="stage" id="stage" aria-label="3D-voorbeeld van het kledingstuk">
+    <div id="view"><div class="loading" id="loading">3D-model laden…</div></div>
+    <span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>
+    <div class="ov readout" id="readout" hidden></div>
+    <div class="stage-tools">
+      <button class="tgl" id="helpBtn" aria-expanded="false">Hulp</button>
+      <button class="tgl" id="guides" aria-pressed="true">Hulplijnen</button>
+    </div>
+    <div class="ov player-nav" id="playerNav" hidden>
+      <button id="pPrev" aria-label="Vorige speler">‹</button><span id="pName"></span><button id="pNext" aria-label="Volgende speler">›</button>
+    </div>
+    <p class="hint" id="hint">Sleep uw logo om het te verplaatsen. Sleep ernaast om het kledingstuk te draaien.</p>
+    <div class="ov help" id="helpBox" hidden>
+      <b>Zo werkt het</b>
+      <ol><li>Kies een kledingstuk en kleur.</li><li>Upload uw logo of typ een tekst.</li><li>Kies waar het komt en hoe groot.</li><li>Vul de aantallen in en vraag een offerte aan.</li></ol>
+      <p><b>Verplaatsen:</b> sleep het logo over de kleding.<br><b>Draaien:</b> sleep naast het kledingstuk.<br><b>Inzoomen:</b> scrollen of met twee vingers knijpen.</p>
+      <p>Hulp nodig? Bel 0113 - 27 08 60.</p>
+      <button class="b" id="helpClose">Sluiten</button>
+    </div>
+    <div class="start-cta" id="startCta" hidden><label for="upload" class="b primary big">Upload uw logo</label><button class="b big" id="startText">Tekst toevoegen</button></div>
+    <div class="ov views" role="group" aria-label="Aanzicht">
+      <button data-view="front" aria-pressed="false">Voor</button>
+      <button data-view="back" aria-pressed="false">Achter</button>
+      <button data-view="sleeveL" aria-pressed="false">Linkermouw</button>
+      <button data-view="sleeveR" aria-pressed="false">Rechtermouw</button>
+    </div>
+    <div class="drop" id="drop" hidden>Laat los om uw logo toe te voegen</div>
+  </section>
+
+  <aside class="panel" aria-label="Ontwerp samenstellen">
+    <div class="panel-inner">
+      <span class="eyebrow">3D-ontwerptool</span>
+      <h1>Ontwerp uw kleding</h1>
+      <p class="lede">In vier stappen naar een offerte. U ziet direct hoe uw logo uitkomt; wij controleren alles en sturen u altijd eerst een proef.</p>
+      <div class="restore" id="restore" hidden><span>Uw vorige ontwerp is hersteld.</span><button id="resetDesign">Opnieuw beginnen</button></div>
+
+      <ol class="wsteps" id="steps" aria-label="Stappen">
+        <li><button data-go="1" aria-current="step"><span class="n">1</span><span class="t">Kledingstuk</span></button></li>
+        <li><button data-go="2"><span class="n">2</span><span class="t">Ontwerp</span></button></li>
+        <li><button data-go="3"><span class="n">3</span><span class="t">Aantallen</span></button></li>
+        <li><button data-go="4"><span class="n">4</span><span class="t">Aanvragen</span></button></li>
+      </ol>
+
+      <section class="step" data-step="1">
+        <div class="step-h"><h2>Welk kledingstuk?</h2><span class="meta" id="colorName"></span></div>
+        <div class="seg" id="models" role="group" aria-label="Model"></div>
+        <h3 class="sub-h">Kleur</h3>
+        <div class="swatches" id="swatches" role="group" aria-label="Kleur"></div>
+        <p class="fine">Het model is een voorbeeld. Staat uw kleur of artikel er niet bij? Kies wat er het meest op lijkt en zet uw wens bij de opmerkingen in stap 4.</p>
+      </section>
+
+      <section class="step" data-step="2" hidden>
+        <div class="step-h"><h2>Uw logo of tekst</h2><span class="meta" id="layerCount"></span></div>
+        <input type="file" id="upload" class="vh" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+        <label for="upload" class="dropzone" tabindex="0" id="uploadBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+          <b id="uploadLabel">Upload uw logo</b><span>Klik hier of sleep een bestand op het kledingstuk. PNG, JPG of SVG.</span>
+        </label>
+        <button class="b grow" id="addText"><span aria-hidden="true">Aa</span> Tekst toevoegen</button>
+        <ul class="layers" id="layers" role="listbox" aria-label="Bedrukkingen"></ul>
+        <div class="editor" id="editor" hidden></div>
+        <p class="fine">Heeft u alleen een PDF, AI of EPS? Upload dan een schermafbeelding als voorbeeld en stuur het origineel later mee. Geen logo bij de hand? U kunt ook zonder ontwerp verder.</p>
+      </section>
+
+      <section class="step" data-step="3" hidden>
+        <div class="step-h"><h2>Hoeveel stuks?</h2><span class="meta" id="qtyTotal"></span></div>
+        <div class="sizes" id="sizes"></div>
+        <p class="fine" id="sizesNote" hidden>De aantallen komen uit de spelerslijst hieronder.</p>
+        <p class="fine">Twijfelt u over maten? Vul een schatting in. Wij helpen graag met passen.</p>
+        <div class="team-box">
+          <label class="chk"><input type="checkbox" id="teamOn"> Elke speler een eigen naam en nummer (teamkleding)</label>
+          <div id="teamBox" hidden>
+            <table class="team-table"><thead><tr><th>Naam</th><th style="width:64px">Nr.</th><th style="width:76px">Maat</th><th></th></tr></thead><tbody id="teamRows"></tbody></table>
+            <div class="row" style="margin-top:8px"><button class="b grow" id="addPlayer">Speler toevoegen</button><button class="b grow" id="pasteToggle">Plakken uit Excel</button></div>
+            <div id="pasteBox" hidden style="margin-top:8px;display:grid;gap:8px">
+              <textarea id="pasteArea" placeholder="Plak hier uw lijst: naam, nummer en maat per regel&#10;Jansen	10	L&#10;De Vries	7	M"></textarea>
+              <button class="b primary" id="pasteApply">Lijst overnemen</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" data-step="4" hidden>
+        <div class="step-h"><h2>Controleren en aanvragen</h2></div>
+        <div class="review" id="review"></div>
+        <section class="sec" id="priceSec" style="border:0;padding:0;margin:0">
+          <div class="sec-h"><h3 class="sub-h">Prijsindicatie</h3><span class="meta">excl. btw</span></div>
+          <div class="price" id="price"></div>
+          <p class="fine">Dit is een indicatie. U ontvangt altijd een offerte op maat met een digitale proef.</p>
+        </section>
+        <button class="b red" id="openRequest">Offerte aanvragen</button>
+        <p class="fine center">Vrijblijvend. Wij nemen binnen één werkdag contact met u op.</p>
+        <div class="row"><button class="b grow" id="download">Afbeelding opslaan</button><button class="b grow" id="copy">Specificatie kopiëren</button></div>
+        <details class="spec-d"><summary>Technische specificatie bekijken</summary><pre class="spec" id="spec"></pre></details>
+      </section>
+
+      <div class="stepnav" id="stepnav">
+        <button class="b" id="prevStep">Terug</button>
+        <button class="b primary grow" id="nextStep">Volgende</button>
+      </div>
+      <p class="stepmsg" id="stepMsg" role="alert" hidden></p>
+    </div>
+  </aside>
+</div>
+</main>
+
+<dialog class="req" id="reqDialog" aria-labelledby="reqTitle">
+  <div class="req-in">
+    <div class="req-h"><h2 id="reqTitle">Offerte aanvragen</h2><button class="req-x" id="reqClose" aria-label="Sluiten">×</button></div>
+    <div class="req-sum"><img id="reqImg" alt="Voorbeeld van uw ontwerp"><p id="reqSum"></p></div>
+    <form class="form" id="reqForm" novalidate>
+      <div class="field"><span class="lbl">Ik vraag aan voor</span><div class="seg-radio">
+        <label><input type="radio" name="klanttype" value="Bedrijf" checked><span>Bedrijf</span></label>
+        <label><input type="radio" name="klanttype" value="Vereniging of team"><span>Vereniging of team</span></label>
+        <label><input type="radio" name="klanttype" value="Particulier"><span>Particulier</span></label></div></div>
+      <div class="row2"><div class="field"><label for="r-naam">Naam</label><input id="r-naam" name="naam" type="text" autocomplete="name" required></div>
+        <div class="field"><label for="r-org">Bedrijf of vereniging</label><input id="r-org" name="organisatie" type="text" autocomplete="organization"></div></div>
+      <div class="row2"><div class="field"><label for="r-mail">E-mailadres</label><input id="r-mail" name="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="r-tel">Telefoonnummer</label><input id="r-tel" name="telefoon" type="tel" autocomplete="tel"></div></div>
+      <div class="field"><label for="r-datum">Gewenste leverdatum (optioneel)</label><input id="r-datum" name="leverdatum" type="date"></div>
+      <div class="field"><label for="r-opm">Opmerkingen (optioneel)</label><textarea id="r-opm" name="bericht" placeholder="Bijvoorbeeld het merk of artikel dat u in gedachten heeft, of de Pantone-kleuren van uw logo."></textarea></div>
+      <div class="hp" aria-hidden="true"><label for="r-web">Website</label><input id="r-web" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+      <label class="check"><input type="checkbox" name="akkoord" value="ja" required><span>Ik ga akkoord met de verwerking van mijn gegevens volgens de <a href="privacy.html" target="_blank">privacyverklaring</a>.</span></label>
+      <div class="notice err" id="reqErr" hidden></div>
+      <div><button class="btn btn-red" type="submit" id="reqSend">Aanvraag versturen</button></div>
+    </form>
+    <div id="reqDone" hidden style="display:grid;gap:12px">
+      <div class="notice ok"><b>Bedankt, uw aanvraag is verstuurd.</b> Xander Weening, onze B2B-manager, neemt binnen één werkdag contact met u op.</div>
+      <div><button class="btn btn-line" id="reqDoneClose">Sluiten</button></div>
+    </div>
+  </div>
+</dialog>
+<div class="toast" id="toast" hidden></div>
+
+<script src="instellingen.js"></script>
+<script src="tarieven.js"></script>
+<script>(function(){var u=(window.IG_CONFIG||{}).website;if(u){document.getElementById('homeLink').href=u;document.getElementById('siteLink').href=u}})();</script>
+<script src="three.min.js"></script>
+<script src="OrbitControls.js"></script>
+<script src="RoomEnvironment.js"></script>
+<script src="configurator.js"></script>
+</body>
+</html>
